@@ -30,7 +30,7 @@ async fn main() {
 
     // Build our application with a route
     let app = Router::new()
-        .fallback(get_service(ServeDir::new("www")).handle_error(e404))
+        .fallback_service(get_service(ServeDir::new("www")).handle_error(e404))
         .layer(TraceLayer::new_for_http());
 
     // Run it
