@@ -1,14 +1,17 @@
 use std::io;
 use std::net::SocketAddr;
 
-use axum::http::StatusCode;
-use axum::response::IntoResponse;
-use axum::routing::get_service;
+use axum::handler::HandlerWithoutStateExt;
+use axum::routing::{get, get_service};
 use axum::{Router, Server};
 use clap::Parser;
 use log::info;
+use tower::ServiceExt;
 use tower_http::services::ServeDir;
 use tower_http::trace::TraceLayer;
+
+mod error;
+mod route;
 
 /// Hannah & Zakhary's wedding server.
 #[derive(Parser)]
@@ -30,7 +33,18 @@ async fn main() {
 
     // Build our application with a route
     let app = Router::new()
-        .fallback_service(get_service(ServeDir::new("www")).handle_error(e404))
+        .route("/", get(route::index))
+        .route("/login/:name", get(route::login))
+        .fallback_service(
+            get_service(
+                ServeDir::new("www").not_found_service(
+                    error::e404
+                        .into_service()
+                        .map_err(|err| -> io::Error { match err {} }),
+                ),
+            )
+            .handle_error(error::e500),
+        )
         .layer(TraceLayer::new_for_http());
 
     // Run it
@@ -40,8 +54,4 @@ async fn main() {
         .serve(app.into_make_service())
         .await
         .unwrap();
-}
-
-async fn e404(err: io::Error) -> impl IntoResponse {
-    (StatusCode::NOT_FOUND, format!("404: Not Found: {err}"))
 }
