@@ -1,7 +1,10 @@
 {% extends "index.html" %}
 
 {%- block content -%}
-      <p>
-        {{ name }}
-      </p>
+      <form action="/login" method="post">
+        <label for="name">
+          <input type="text" name="name" placeholder="Your name">
+        </label>
+        <input type="submit" value="Login">
+      </form>
 {%- endblock -%}
