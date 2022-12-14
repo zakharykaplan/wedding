@@ -1024,16 +1024,16 @@ h5.semi,
 h6.semi {
   font-weight: var(--font-weight-semi);
 }
-.ft-normal, .ft.bold,
+.ft-normal, .ft.normal,
 .font-normal,
-.font.bold,
-body.bold,
-h1.bold,
-h2.bold,
-h3.bold,
-h4.bold,
-h5.bold,
-h6.bold {
+.font.normal,
+body.normal,
+h1.normal,
+h2.normal,
+h3.normal,
+h4.normal,
+h5.normal,
+h6.normal {
   font-weight: var(--font-weight-normal);
 }
 .ft-light, .ft.bold,
